@@ -17,24 +17,34 @@ const Message: React.FC<MessageProps> = ({
   mode,
 }) => {
   const isWhiteCaption = !["rec__default", "sen__default"].includes(mode);
-  console.log(mode);
+  const messageType = mode.split("__")[0];
+  console.log(messageType);
 
   return (
     <Box
-      className={
-        className
-          ? cn(className, mode, styles.message)
-          : cn(styles.message, styles[mode])
+      className={styles.message__wrapper}
+      sx={
+        messageType === "sen"
+          ? { display: "flex", justifyContent: "flex-end" }
+          : { display: "flex", justifyContent: "flex-start" }
       }
     >
-      <Typography
-        variant="caption"
-        style={isWhiteCaption ? { color: "#fff" } : { color: "#9c9898" }}
-        className={styles.message__caption}
+      <Box
+        className={
+          className
+            ? cn(className, mode, styles.message)
+            : cn(styles.message, styles[mode])
+        }
       >
-        {senderName}
-      </Typography>
-      <Typography className={styles.message__text}>{text}</Typography>
+        <Typography
+          variant="caption"
+          style={isWhiteCaption ? { color: "#fff" } : { color: "#9c9898" }}
+          className={styles.message__caption}
+        >
+          {senderName}
+        </Typography>
+        <Typography className={styles.message__text}>{text}</Typography>
+      </Box>
     </Box>
   );
 };

@@ -1,0 +1,9 @@
+@import "../../styles/variables.scss";
+
+.header {
+  &__wrapper {
+    width: 85vw;
+    margin: 0 auto;
+    padding: 30px 0;
+  }
+}
