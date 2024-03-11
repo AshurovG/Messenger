@@ -1,0 +1,24 @@
+@import "../../styles/variables.scss";
+
+.message {
+  display: inline-block;
+  padding: 10px 30px 10px 10px;
+  border-radius: 10px;
+
+  &__caption {
+    font-size: 14px;
+    padding-bottom: 5px;
+  }
+
+  &__text {
+    font-size: 18px;
+  }
+}
+
+.rec__default {
+  background-color: $received-message !important;
+}
+
+.sen__default {
+  background-color: $sended-message !important;
+}

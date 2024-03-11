@@ -1,12 +1,16 @@
-import React from 'react'
-import styles from './Button.module.scss'
+import React from "react";
+import styles from "./Button.module.scss";
 
-const Button = () => {
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  onClick: () => void;
+};
+
+const Button: React.FC<ButtonProps> = ({ onClick, ...props }) => {
   return (
-    <div className={styles.button}>
-        Button
-    </div>
-  )
-}
+    <button onClick={onClick} className={styles.button}>
+      Отправить
+    </button>
+  );
+};
 
-export default Button
+export default Button;
