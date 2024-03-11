@@ -14,12 +14,23 @@ type ReceivedMessageData = {
   isError?: boolean;
 };
 
-type ConectionsData = {
-  [key: string]: {
-    id: Number;
-    ws: WebSocket;
-  }[];
+// type ConectionsData = {
+//   [key: string]: {
+//     id: Number;
+//     ws: WebSocket;
+//   }[];
+// };
+
+type Connection = {
+  id: number;
+  ws: WebSocket;
 };
+
+type ConectionsData = {
+  [key: string]: Connection;
+};
+
+let connections: ConectionsData = {};
 
 app.post("/receive", (req, res) => {
   const message: ReceivedMessageData = req.body;
@@ -27,10 +38,24 @@ app.post("/receive", (req, res) => {
   res.sendStatus(200);
 });
 
-let connections = {};
-
-wss.on("connection", (ws) => {
+wss.on("connection", (ws, req: any) => {
   console.log("Client connected");
+  const url = new URL(req.url, `http://${req.headers.host}`);
+  const username = url.searchParams.get("username");
+
+  if (username) {
+    // Проверяем, есть ли уже подключение для данного пользователя
+    if (connections[username]) {
+      // Если подключение уже существует, закрываем его
+      connections[username].ws.close();
+    }
+    // Добавляем новое подключение
+    connections[username] = { id: Date.now(), ws: ws };
+    console.log(connections);
+  } else {
+    console.error("Username not provided");
+    ws.close();
+  }
 
   ws.on("message", (message) => {
     try {
