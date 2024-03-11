@@ -18,7 +18,6 @@ const Message: React.FC<MessageProps> = ({
 }) => {
   const isWhiteCaption = !["rec__default", "sen__default"].includes(mode);
   const messageType = mode.split("__")[0];
-  console.log(messageType);
 
   return (
     <Box

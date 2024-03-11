@@ -1,0 +1,19 @@
+@import "../../styles/variables.scss";
+
+.button {
+  min-width: 56px;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &__default {
+    border: 1px solid $send-default;
+    border-radius: 50%;
+
+    &-icon {
+      color: $send-default;
+    }
+  }
+}
