@@ -20,6 +20,9 @@
     flex-direction: column-reverse;
     justify-content: flex-start;
     gap: 10px;
-    margin-bottom: 30px;
+  }
+
+  &__form {
+    margin: 0 auto;
   }
 }
