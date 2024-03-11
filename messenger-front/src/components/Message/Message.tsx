@@ -1,7 +1,7 @@
 import React from "react";
 import cn from "classnames";
 import styles from "./Message.module.scss";
-import { Container, Typography } from "@mui/material";
+import { Typography, Box } from "@mui/material";
 
 type MessageProps = {
   senderName: string;
@@ -20,7 +20,7 @@ const Message: React.FC<MessageProps> = ({
   console.log(mode);
 
   return (
-    <div
+    <Box
       className={
         className
           ? cn(className, mode, styles.message)
@@ -35,7 +35,7 @@ const Message: React.FC<MessageProps> = ({
         {senderName}
       </Typography>
       <Typography className={styles.message__text}>{text}</Typography>
-    </div>
+    </Box>
   );
 };
 

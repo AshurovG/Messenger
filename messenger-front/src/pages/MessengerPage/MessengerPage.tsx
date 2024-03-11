@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./MessengerPage.module.scss";
 import Message from "components/Message";
-import Input from "components/Input";
+import Input from "components/Input/";
 import Button from "components/Button";
 
 const MessengerPage = () => {
@@ -14,13 +14,13 @@ const MessengerPage = () => {
           mode="sen__default"
         />
 
-        <Input></Input>
+        <Input placeholder="Введите сообщение..." mode="input__dark" />
         <Button
           onClick={() => {
             console.log(111);
           }}
         >
-          fdsf
+          Отправить
         </Button>
       </div>
     </div>

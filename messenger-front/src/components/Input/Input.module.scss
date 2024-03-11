@@ -1,6 +1,60 @@
 @import "../../styles/variables.scss";
 
 .input {
-  border: 1px solid #000;
   padding: 10px;
+  border-radius: $border-radius;
+  border: 1px solid $input-default-value !important;
+
+  &:hover {
+    border-style: none; /* Используйте border-style вместо border: none; */
+    outline: none;
+  }
+
+  &__default {
+    background-color: $input-default;
+
+    & input {
+      color: $input-default-value; // Этот стиль будет применен к тексту внутри input
+
+      &::placeholder {
+        color: $input-default-placeholder;
+      }
+    }
+  }
+
+  &__green {
+    background-color: $input-green;
+
+    & input {
+      color: $input-secondary-value; // Этот стиль будет применен к тексту внутри input
+
+      &::placeholder {
+        color: $input-green-placeholder;
+      }
+    }
+  }
+
+  &__blue {
+    background-color: $input-blue;
+
+    & input {
+      color: $input-default-value; // Этот стиль будет применен к тексту внутри input
+
+      &::placeholder {
+        color: $input-blue-placeholder;
+      }
+    }
+  }
+
+  &__dark {
+    background-color: $input-dark;
+
+    & input {
+      color: $input-secondary-value; // Этот стиль будет применен к тексту внутри input
+
+      &::placeholder {
+        color: $input-dark-placeholder;
+      }
+    }
+  }
 }

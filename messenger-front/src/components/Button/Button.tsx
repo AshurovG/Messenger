@@ -1,13 +1,11 @@
 import React from "react";
 import styles from "./Button.module.scss";
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  onClick: () => void;
-};
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {};
 
-const Button: React.FC<ButtonProps> = ({ onClick, ...props }) => {
+const Button: React.FC<ButtonProps> = ({ ...props }) => {
   return (
-    <button onClick={onClick} className={styles.button}>
+    <button {...props} className={styles.button}>
       Отправить
     </button>
   );
