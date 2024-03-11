@@ -9,7 +9,7 @@ import Header from "components/Header";
 const MessengerPage = () => {
   return (
     <div className={styles.page}>
-      <Header />
+      <Header mode="header__default" />
       <Container
         sx={{ width: "85vw", height: "100vh" }}
         className={styles.page__wrapper}
@@ -83,13 +83,6 @@ const MessengerPage = () => {
         </Box>
 
         <Input placeholder="Введите сообщение..." mode="input__default" />
-        <Button
-          onClick={() => {
-            console.log(111);
-          }}
-        >
-          Отправить
-        </Button>
       </Container>
     </div>
   );
