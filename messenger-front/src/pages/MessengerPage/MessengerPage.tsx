@@ -9,12 +9,20 @@ import Header from "components/Header";
 import EnterForm from "components/EnterForm";
 import SendButton from "components/SendButton";
 
+type MessageData = {
+  sender: string;
+  text: string;
+  isError?: boolean;
+  type: "rec" | "sen";
+};
+
 const MessengerPage = () => {
   const dispatch = useDispatch();
   const username = useUsername();
   const [usernameValue, setUsernameValue] = useState("");
   const [messageValue, setMessageValue] = useState("");
   const [ws, setWs] = useState<WebSocket | null>(null);
+  const [messages, setMessages] = useState<MessageData[]>([]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsernameValue(event.target.value);
@@ -35,10 +43,26 @@ const MessengerPage = () => {
   };
 
   const sendMessage = () => {
-    // if (ws) {
-    //   ws.send(message);
-    // }
-    console.log(messageValue);
+    if (ws) {
+      ws.send(
+        JSON.stringify({
+          sender: username,
+          time: new Date().toISOString(),
+          text: messageValue,
+        })
+      );
+
+      setMessages([
+        ...messages,
+        {
+          sender: username,
+          text: messageValue,
+          type: "sen",
+        },
+      ]);
+
+      setMessageValue("");
+    }
   };
 
   return (
@@ -50,7 +74,14 @@ const MessengerPage = () => {
       >
         {username !== "" && (
           <Box className={styles.page__messages}>
-            <Message
+            {messages.map((message) => (
+              <Message
+                senderName={message.sender}
+                text={message.text}
+                mode={`${message.type}__default`}
+              />
+            ))}
+            {/* <Message
               senderName="user1"
               text="Hello, how are you?"
               mode="sen__default"
@@ -114,7 +145,7 @@ const MessengerPage = () => {
               senderName="user1"
               text="Hello, how are you?"
               mode="rec__default"
-            />
+            /> */}
           </Box>
         )}
 
