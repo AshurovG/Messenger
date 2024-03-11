@@ -1,6 +1,7 @@
 import React from "react";
 import cn from "classnames";
 import styles from "./Message.module.scss";
+import { Container, Typography } from "@mui/material";
 
 type MessageProps = {
   senderName: string;
@@ -26,15 +27,14 @@ const Message: React.FC<MessageProps> = ({
           : cn(styles.message, styles[mode])
       }
     >
-      <div className={styles.message__container}>
-        <p
-          style={isWhiteCaption ? { color: "#fff" } : { color: "#9c9898" }}
-          className={styles.message__caption}
-        >
-          {senderName}
-        </p>
-        <p className={styles.message__text}>{text}</p>
-      </div>
+      <Typography
+        variant="caption"
+        style={isWhiteCaption ? { color: "#fff" } : { color: "#9c9898" }}
+        className={styles.message__caption}
+      >
+        {senderName}
+      </Typography>
+      <Typography className={styles.message__text}>{text}</Typography>
     </div>
   );
 };
