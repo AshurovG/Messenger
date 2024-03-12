@@ -51,9 +51,7 @@ wss.on("connection", (ws, req: any) => {
     }
     // Добавляем новое подключение
     connections[username] = { id: Date.now(), ws: ws };
-    console.log(connections);
   } else {
-    console.error("Username not provided");
     ws.close();
   }
 
@@ -62,7 +60,14 @@ wss.on("connection", (ws, req: any) => {
       // Получение сообщения от отправителя с браузера
       const messageString = message.toString();
       const data = JSON.parse(messageString);
-      console.log(`Received message:`, data);
+      console.log(data);
+
+      for (const connection of Object.values(connections)) {
+        if (connection.ws !== ws) {
+          // Исключаем отправителя из получателей
+          connection.ws.send(JSON.stringify(data));
+        }
+      }
     } catch (error) {
       console.error("Error parsing JSON:", error);
     }
@@ -70,6 +75,10 @@ wss.on("connection", (ws, req: any) => {
 
   ws.on("close", () => {
     console.log("Client disconnected");
+    // Удаляем закрытое подключение из объекта connections
+    if (username && connections[username]) {
+      delete connections[username];
+    }
   });
 });
 
