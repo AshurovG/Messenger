@@ -85,7 +85,7 @@ wss.on("connection", (ws, req: any) => {
 
   ws.on("close", () => {
     console.log("Client disconnected");
-    // Удаляем закрытое подключение из объекта connections
+    // Удаляем закрытое подключение из объекта connections при закрытии о
     if (username && connections[username]) {
       delete connections[username];
     }
