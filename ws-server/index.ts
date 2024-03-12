@@ -1,25 +1,19 @@
 import express from "express";
 import http from "http";
 import WebSocket from "ws";
+import axios from "axios";
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 app.use(express.json());
 
-type ReceivedMessageData = {
-  senderName: string;
+type MessageData = {
+  sender: string;
   text: string;
-  date: Date; // Также является идентификатором сообщения
+  time: Date; // Также является идентификатором сообщения
   isError?: boolean;
 };
-
-// type ConectionsData = {
-//   [key: string]: {
-//     id: Number;
-//     ws: WebSocket;
-//   }[];
-// };
 
 type Connection = {
   id: number;
@@ -32,9 +26,30 @@ type ConectionsData = {
 
 let connections: ConectionsData = {};
 
+// Отправка сообщения на транспортный уровень
+const sendMessageToAnotherLevel = async (message: MessageData) => {
+  try {
+    await axios("http://localhost:3001/send", {
+      method: "POST",
+      data: message,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const sendMessageToOtherUsers = (message: MessageData) => {
+  for (const [key, value] of Object.entries(connections)) {
+    if (key !== message.sender) {
+      value.ws.send(JSON.stringify(message)); // Отправляем все пользователям кроме отправителя
+    }
+  }
+};
+
+//Метод для получения сообщений с транспортного уровня
 app.post("/receive", (req, res) => {
-  const message: ReceivedMessageData = req.body;
-  console.log(message);
+  const message: MessageData = req.body;
+  sendMessageToOtherUsers(message);
   res.sendStatus(200);
 });
 
@@ -57,17 +72,12 @@ wss.on("connection", (ws, req: any) => {
 
   ws.on("message", (message) => {
     try {
-      // Получение сообщения от отправителя с браузера
+      // Получение сообщения от отправителя с браузера отправителя
       const messageString = message.toString();
-      const data = JSON.parse(messageString);
-      console.log(data);
+      const messageJSON = JSON.parse(messageString);
+      console.log(messageJSON);
 
-      for (const connection of Object.values(connections)) {
-        if (connection.ws !== ws) {
-          // Исключаем отправителя из получателей
-          connection.ws.send(JSON.stringify(data));
-        }
-      }
+      sendMessageToAnotherLevel(messageJSON);
     } catch (error) {
       console.error("Error parsing JSON:", error);
     }
