@@ -11,6 +11,7 @@ import SendButton from "components/SendButton";
 
 type MessageData = {
   sender: string;
+  time?: any;
   text: string;
   isError?: boolean;
   type: "rec" | "sen";
@@ -34,11 +35,27 @@ const MessengerPage = () => {
     setMessageValue(event.target.value);
   };
 
+  if (ws) {
+    ws.onmessage = (event) => {
+      const messageData = JSON.parse(event.data);
+      setMessages((prevMessages) => [
+        {
+          sender: messageData.sender,
+          text: messageData.text,
+          time: messageData.time,
+          type: "rec",
+        },
+        ...prevMessages,
+      ]);
+      console.log(messageData);
+    };
+  }
+
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
     dispatch(setUsernameAction(usernameValue));
 
-    const ws = new WebSocket("ws://localhost:3000");
+    const ws = new WebSocket(`ws://localhost:3000?username=${usernameValue}`);
     setWs(ws);
   };
 
@@ -53,12 +70,12 @@ const MessengerPage = () => {
       );
 
       setMessages([
-        ...messages,
         {
           sender: username,
           text: messageValue,
           type: "sen",
         },
+        ...messages,
       ]);
 
       setMessageValue("");
