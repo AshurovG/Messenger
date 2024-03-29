@@ -7,11 +7,12 @@ const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 app.use(express.json());
+const HOST = "172.20.10.3";
 
 type MessageData = {
   sender: string;
   text: string;
-  time: Date; // Также является идентификатором сообщения
+  time: Number; // Также является идентификатором сообщения
   isError?: boolean;
 };
 
@@ -29,7 +30,11 @@ let connections: ConectionsData = {};
 // Отправка сообщения на транспортный уровень
 const sendMessageToAnotherLevel = async (message: MessageData) => {
   try {
-    await axios("http://localhost:3001/send", {
+    // await axios("http://localhost:3001/send", {
+    //   method: "POST",
+    //   data: message,
+    // });
+    await axios(`http://${HOST}:8000/transferMessage/`, {
       method: "POST",
       data: message,
     });
@@ -46,10 +51,26 @@ const sendMessageToOtherUsers = (message: MessageData) => {
   }
 };
 
+const sendErrorMessage = (message: MessageData) => {
+  const connection = connections[message.sender];
+  if (connection) {
+    connection.ws.send(JSON.stringify(message)); // Отправляем сообщение об ошибке пользователю, который отправил сообщение
+  } else {
+    console.log(`No connection found for sender: ${message.sender}`);
+  }
+};
+
 //Метод для получения сообщений с транспортного уровня
-app.post("/receive", (req, res) => {
-  const message: MessageData = req.body;
-  sendMessageToOtherUsers(message);
+app.post("/recieve", (req, res) => {
+  // TODO: Сделать обработку ошибки
+  const message: MessageData = req.body; // --
+  console.log("BODY IS", req.body);
+  if (req.body.isError) {
+    sendErrorMessage(message);
+    console.log("Произошла ошибка отправки сообщения");
+  } else {
+    sendMessageToOtherUsers(message); // --
+  }
   res.sendStatus(200);
 });
 
@@ -57,6 +78,7 @@ wss.on("connection", (ws, req: any) => {
   console.log("Client connected");
   const url = new URL(req.url, `http://${req.headers.host}`);
   const username = url.searchParams.get("username");
+  console.log("connected", username);
 
   if (username) {
     // Проверяем, есть ли уже подключение для данного пользователя
@@ -75,7 +97,11 @@ wss.on("connection", (ws, req: any) => {
       // Получение сообщения от отправителя с браузера отправителя
       const messageString = message.toString();
       const messageJSON = JSON.parse(messageString);
+      const date = new Date(messageJSON.time);
+      const timeInSeconds = Math.floor(date.getTime() / 1000);
+      messageJSON.time = timeInSeconds;
       console.log(messageJSON);
+      // messageJSON.time = Math.floor(messageJSON.date.getTime() / 1000);
 
       sendMessageToAnotherLevel(messageJSON);
     } catch (error) {
