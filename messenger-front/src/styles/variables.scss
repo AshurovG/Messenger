@@ -2,8 +2,14 @@ $content-width: 1440px;
 
 $border-radius: 10px;
 
-$received-message: #e0e0e0;
-$sended-message: #e1e5ff;
+$received-default: #e0e0e0;
+$sended-default: #e1e5ff;
+$received-green: #87a9a1;
+$sended-green: #429783;
+$received-blue: #a3aad4;
+$sended-blue: #68b7d3;
+$received-dark: #172636;
+$sended-dark: #153b60;
 
 $input-default: #fff;
 $input-green: #3d5d52;
@@ -26,7 +32,7 @@ $button-green: #1c5e20;
 $button-blue: #00569b;
 $button-dark: #465b64;
 
-$send-default: #707070;
+// $send-default: #707070;
 
 $window-default: #e9e9e9;
 

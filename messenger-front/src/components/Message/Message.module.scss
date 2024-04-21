@@ -27,9 +27,33 @@
 }
 
 .rec__default {
-  background-color: $received-message !important;
+  background-color: $received-default !important;
 }
 
 .sen__default {
-  background-color: $sended-message !important;
+  background-color: $sended-default !important;
+}
+
+.rec__green {
+  background-color: $received-green !important;
+}
+
+.sen__green {
+  background-color: $received-green !important;
+}
+
+.rec__blue {
+  background-color: $received-blue !important;
+}
+
+.sen__blue {
+  background-color: $received-blue !important;
+}
+
+.rec__dark {
+  background-color: $received-dark !important;
+}
+
+.sen__dark {
+  background-color: $received-dark !important;
 }

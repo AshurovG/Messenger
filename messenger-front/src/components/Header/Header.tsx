@@ -6,6 +6,7 @@ import { Search, Settings, PersonOutline } from "@mui/icons-material";
 import { useUsername } from "slices/MainSlice";
 import ThemeWindow from "components/ThemeWindow";
 import Input from "components/Input";
+import { useTheme } from "slices/MainSlice";
 
 type HeaderProps = {
   mode: "header__default" | "header__green" | "header__blue" | "header__dark";
@@ -13,6 +14,7 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ mode }) => {
   const username = useUsername();
+  const theme = useTheme();
   const [isThemeWindowOpened, setIsThemeWindowOpened] = useState(false);
   const [isSearchInput, setIsSearchInput] = useState(false);
 
@@ -33,32 +35,37 @@ const Header: React.FC<HeaderProps> = ({ mode }) => {
   return (
     <AppBar className={cn(styles.header, styles[mode])}>
       <Container className={styles.header__wrapper}>
-        <Box className={styles.header__item}>
-          <Typography variant="h6">{username}</Typography>
-          <PersonOutline fontSize="large" />
+        <Box className={styles.header__nav}>
+          <Box className={styles.header__item}>
+            <Typography variant="h6">{username}</Typography>
+            <PersonOutline fontSize="large" />
+          </Box>
+
+          <Box className={styles.header__item}>
+            <Search
+              onClick={handleSearchButtonClick}
+              fontSize="large"
+              sx={{ cursor: "pointer" }}
+            />
+            <Settings
+              onClick={handleSettingsButtonClick}
+              fontSize="large"
+              sx={{ cursor: "pointer" }}
+            />
+          </Box>
         </Box>
 
-        <Box className={styles.header__item}>
-          <Search
-            onClick={handleSearchButtonClick}
-            fontSize="large"
-            sx={{ cursor: "pointer" }}
-          />
-          <Settings
-            onClick={handleSettingsButtonClick}
-            fontSize="large"
-            sx={{ cursor: "pointer" }}
-          />
-        </Box>
         {isSearchInput && (
           <Input
             placeholder="Поиск сообщения"
             className={styles.header__input}
-            mode="input__default"
+            mode={`input__${theme}`}
           />
         )}
         {isThemeWindowOpened && (
-          <ThemeWindow className={styles.header__theme} />
+          <div>
+            <ThemeWindow className={styles.header__theme} />
+          </div>
         )}
       </Container>
     </AppBar>

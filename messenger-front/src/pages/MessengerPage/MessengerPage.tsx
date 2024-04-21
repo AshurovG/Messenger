@@ -8,6 +8,7 @@ import { Container, Box, Typography } from "@mui/material";
 import Header from "components/Header";
 import EnterForm from "components/EnterForm";
 import SendButton from "components/SendButton";
+import { useTheme } from "slices/MainSlice";
 
 type MessageData = {
   sender: string;
@@ -19,6 +20,7 @@ type MessageData = {
 
 const MessengerPage = () => {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const username = useUsername();
   const [usernameValue, setUsernameValue] = useState("");
   const [messageValue, setMessageValue] = useState("");
@@ -102,7 +104,7 @@ const MessengerPage = () => {
 
   return (
     <div className={styles.page}>
-      <Header mode="header__default" />
+      <Header mode={`header__${theme}`} />
       <Container
         sx={{ width: "85vw", height: "100vh" }}
         className={styles.page__wrapper}
@@ -114,7 +116,7 @@ const MessengerPage = () => {
                 senderName={message.sender}
                 text={message.text}
                 isError={message.isError}
-                mode={`${message.type}__default`}
+                mode={`${message.type}__${theme}`}
               />
             ))}
           </Box>
@@ -126,9 +128,9 @@ const MessengerPage = () => {
               value={messageValue}
               onChange={handleMessageInputChange}
               placeholder="Введите сообщение..."
-              mode="input__default"
+              mode={`input__${theme}`}
             />
-            <SendButton mode="button__default" onClick={sendMessage} />
+            <SendButton mode={`button__${theme}`} onClick={sendMessage} />
           </Box>
         )}
         {username === "" && (

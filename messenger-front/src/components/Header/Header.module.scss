@@ -24,10 +24,16 @@
   }
 
   &__wrapper {
-    position: relative;
+    position: relative !important;
     width: 85vw;
     margin: 0 auto;
     padding: 30px 0;
+    // display: flex !important;
+    // align-items: center;
+    // justify-content: space-between;
+  }
+
+  &__nav {
     display: flex !important;
     align-items: center;
     justify-content: space-between;
@@ -46,8 +52,7 @@
   }
 
   &__input {
-    position: static;
-    position: absolute;
+    position: absolute !important;
     right: 0;
     top: 110px;
     max-width: 300px;

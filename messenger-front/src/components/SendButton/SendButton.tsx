@@ -19,7 +19,14 @@ const SendButton: React.FC<SendButtonProps> = ({
       className={cn(styles.button, className, styles[mode])}
       onClick={onClick}
     >
-      <Send className={styles["button__default-icon"]} />
+      <Send
+        className={styles["button__default-icon"]}
+        sx={
+          mode === "button__default" || mode === "button__blue"
+            ? { color: "#707070" }
+            : { color: "#fff" }
+        }
+      />
     </div>
   );
 };

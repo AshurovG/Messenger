@@ -11,7 +11,7 @@
   }
 
   &__default {
-    background-color: $input-default;
+    background-color: $input-default !important;
 
     & input {
       color: $input-default-value;
@@ -23,10 +23,10 @@
   }
 
   &__green {
-    background-color: $input-green;
+    background-color: $input-green !important;
 
     & input {
-      color: $input-secondary-value;
+      color: $input-secondary-value !important;
 
       &::placeholder {
         color: $input-green-placeholder;

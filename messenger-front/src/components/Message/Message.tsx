@@ -9,7 +9,15 @@ type MessageProps = {
   text: string;
   className?: string;
   isError?: boolean;
-  mode: "rec__default" | "sen__default";
+  mode:
+    | "rec__default"
+    | "sen__default"
+    | "sen__green"
+    | "rec__green"
+    | "sen__blue"
+    | "rec__blue"
+    | "sen__dark"
+    | "rec__dark";
 };
 
 const Message: React.FC<MessageProps> = ({

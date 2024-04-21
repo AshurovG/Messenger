@@ -7,13 +7,31 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  border: 1px solid #000;
 
   &__default {
-    border: 1px solid $send-default;
     border-radius: 50%;
 
     &-icon {
-      color: $send-default;
+      // color: $send-default;
     }
+  }
+
+  &__default {
+  }
+
+  &__green {
+    background-color: $input-green;
+    border-radius: 50%;
+  }
+
+  &__blue {
+    background-color: $input-blue;
+    border-radius: 50%;
+  }
+
+  &__dark {
+    background-color: $input-dark;
+    border-radius: 50%;
   }
 }
