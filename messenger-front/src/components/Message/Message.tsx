@@ -2,11 +2,13 @@ import React from "react";
 import cn from "classnames";
 import styles from "./Message.module.scss";
 import { Typography, Box } from "@mui/material";
+import { ErrorRounded } from "@mui/icons-material";
 
 type MessageProps = {
   senderName: string;
   text: string;
   className?: string;
+  isError?: boolean;
   mode: "rec__default" | "sen__default";
 };
 
@@ -14,6 +16,7 @@ const Message: React.FC<MessageProps> = ({
   senderName,
   text,
   className,
+  isError,
   mode,
 }) => {
   const isWhiteCaption = !["rec__default", "sen__default"].includes(mode);
@@ -43,6 +46,7 @@ const Message: React.FC<MessageProps> = ({
           {senderName}
         </Typography>
         <Typography className={styles.message__text}>{text}</Typography>
+        {isError && <ErrorRounded className={styles.message__icon} />}
       </Box>
     </Box>
   );

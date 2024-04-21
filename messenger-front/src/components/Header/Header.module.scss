@@ -2,6 +2,7 @@
 
 .header {
   position: static !important;
+
   &__default {
     background: $header-default !important;
     color: $input-default-value !important;
@@ -23,6 +24,7 @@
   }
 
   &__wrapper {
+    position: relative;
     width: 85vw;
     margin: 0 auto;
     padding: 30px 0;
@@ -35,5 +37,22 @@
     display: flex;
     align-items: center;
     gap: 20px;
+  }
+
+  &__theme {
+    position: absolute;
+    right: 0;
+    top: 110px;
+  }
+
+  &__input {
+    position: static;
+    position: absolute;
+    right: 0;
+    top: 110px;
+    max-width: 300px;
+    height: 40px;
+    padding-bottom: 15px !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 }

@@ -6,7 +6,7 @@
   border: 1px solid $input-default-value !important;
 
   &:hover {
-    border-style: none; /* Используйте border-style вместо border: none; */
+    border-style: none;
     outline: none;
   }
 
@@ -14,7 +14,7 @@
     background-color: $input-default;
 
     & input {
-      color: $input-default-value; // Этот стиль будет применен к тексту внутри input
+      color: $input-default-value;
 
       &::placeholder {
         color: $input-default-placeholder;
@@ -26,7 +26,7 @@
     background-color: $input-green;
 
     & input {
-      color: $input-secondary-value; // Этот стиль будет применен к тексту внутри input
+      color: $input-secondary-value;
 
       &::placeholder {
         color: $input-green-placeholder;
@@ -38,7 +38,7 @@
     background-color: $input-blue;
 
     & input {
-      color: $input-default-value; // Этот стиль будет применен к тексту внутри input
+      color: $input-default-value;
 
       &::placeholder {
         color: $input-blue-placeholder;
@@ -50,7 +50,7 @@
     background-color: $input-dark;
 
     & input {
-      color: $input-secondary-value; // Этот стиль будет применен к тексту внутри input
+      color: $input-secondary-value;
 
       &::placeholder {
         color: $input-dark-placeholder;

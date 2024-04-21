@@ -38,24 +38,42 @@ const MessengerPage = () => {
   if (ws) {
     ws.onmessage = (event) => {
       const messageData = JSON.parse(event.data);
-      setMessages((prevMessages) => [
-        {
-          sender: messageData.sender,
-          text: messageData.text,
-          time: messageData.time,
-          type: "rec",
-        },
-        ...prevMessages,
-      ]);
+      if (event.data.isError) {
+        // messages[messages.length - 1].isError = true;
+        setMessages((prevMessages) => {
+          const newMessages = [...prevMessages]; // Создаем копию массива
+          newMessages[newMessages.length - 1].isError = true; // Изменяем нужный элемент
+          return newMessages; // Возвращаем новый массив
+        });
+        console.log("error!!!");
+      } else {
+        setMessages((prevMessages) => [
+          {
+            sender: messageData.sender,
+            text: messageData.text,
+            time: messageData.time,
+            type: "rec",
+          },
+          ...prevMessages,
+        ]);
+      }
+
       console.log(messageData);
     };
   }
 
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = (event) => {
     event.preventDefault();
-    dispatch(setUsernameAction(usernameValue));
 
     const ws = new WebSocket(`ws://localhost:3000?username=${usernameValue}`);
+    ws.onclose = (event) => {
+      console.log("WebSocket соединение закрыто:", event.code, event.reason);
+    };
+
+    ws.onopen = () => {
+      console.log("WebSocket соединение открыто");
+      dispatch(setUsernameAction(usernameValue));
+    };
     setWs(ws);
   };
 
@@ -95,74 +113,10 @@ const MessengerPage = () => {
               <Message
                 senderName={message.sender}
                 text={message.text}
+                isError={message.isError}
                 mode={`${message.type}__default`}
               />
             ))}
-            {/* <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="sen__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you dfkldsjfkljksldjf?"
-              mode="rec__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="sen__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="sen__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="rec__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="rec__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="sen__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="rec__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="rec__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="sen__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="rec__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="rec__default"
-            />
-            <Message
-              senderName="user1"
-              text="Hello, how are you?"
-              mode="rec__default"
-            /> */}
           </Box>
         )}
 

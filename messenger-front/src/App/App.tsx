@@ -1,11 +1,13 @@
 import styles from "./App.module.scss";
 import MessengerPage from "pages/MessengerPage";
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-// import Header from "components/Header";
+import { useTheme } from "slices/MainSlice";
 
 function App() {
+  const theme = useTheme();
+
   return (
-    <div className={styles.app}>
+    <div className={styles[`app__${theme}`]}>
       {/* <Header mode="header__default" /> */}
       <HashRouter>
         <Routes>

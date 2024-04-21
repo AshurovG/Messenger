@@ -1,3 +1,23 @@
-// .app {
-//   color: red
-// }
+.app {
+  &__default {
+    background-color: #fff;
+  }
+
+  &__dark {
+    background-color: #000;
+  }
+
+  &__green {
+    background-image: url("../assets/green.jpeg");
+    // background-size: 35%;
+    // background-position: center center; /* Располагаем изображение по центру */
+    // background-repeat: no-repeat;
+    background-size: 50% 50%; /* Уменьшаем изображение в 2 раза */
+    background-position: center center; /* Располагаем изображение по центру */
+  }
+
+  &__blue {
+    background-image: url("../assets/blue.png");
+    background-size: 35%;
+  }
+}
