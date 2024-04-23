@@ -2,7 +2,7 @@
 
 .theme {
   //   width: 400px;
-  background-color: $window-default;
+  //   background-color: $window-default;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
 
@@ -12,7 +12,7 @@
   }
 
   &__subtitle {
-    color: $text-secondary !important;
+    color: $text-secondary;
   }
 
   &__items {
@@ -27,4 +27,14 @@
     height: 150px;
     border-radius: 10px;
   }
+
+  //   &__default {
+  //     background: red !important;
+  //     // color: $input-default-value !important;
+  //   }
+
+  //   &__secondary {
+  //     background: $window-secondary !important;
+  //     // color: $input-secondary-value !important;
+  //   }
 }

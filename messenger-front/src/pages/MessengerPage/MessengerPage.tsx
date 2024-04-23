@@ -102,9 +102,21 @@ const MessengerPage = () => {
     }
   };
 
+  const handleLogoutButtonClick = () => {
+    if (ws) {
+      ws.close();
+      setWs(null);
+      dispatch(setUsernameAction(""));
+      setUsernameValue("");
+    }
+  };
+
   return (
     <div className={styles.page}>
-      <Header mode={`header__${theme}`} />
+      <Header
+        mode={`header__${theme}`}
+        handleLogoutButtonClick={handleLogoutButtonClick}
+      />
       <Container
         sx={{ width: "85vw", height: "100vh" }}
         className={styles.page__wrapper}
@@ -140,6 +152,11 @@ const MessengerPage = () => {
               marginBottom={1}
               marginTop={5}
               variant="h5"
+              sx={
+                theme === "default" || theme === "blue"
+                  ? { color: "#000" }
+                  : { color: "#fff" }
+              }
             >
               Для входа в чат введите имя пользователя
             </Typography>

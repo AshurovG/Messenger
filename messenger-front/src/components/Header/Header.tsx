@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import cn from "classnames";
 import styles from "./Header.module.scss";
 import { AppBar, Container, Box, Typography } from "@mui/material";
-import { Search, Settings, PersonOutline } from "@mui/icons-material";
-import { useUsername } from "slices/MainSlice";
+import { Search, Settings, PersonOutline, Logout } from "@mui/icons-material";
 import ThemeWindow from "components/ThemeWindow";
 import Input from "components/Input";
-import { useTheme } from "slices/MainSlice";
+import { useTheme, useUsername } from "slices/MainSlice";
 
 type HeaderProps = {
   mode: "header__default" | "header__green" | "header__blue" | "header__dark";
+  handleLogoutButtonClick: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ mode }) => {
+const Header: React.FC<HeaderProps> = ({ mode, handleLogoutButtonClick }) => {
   const username = useUsername();
   const theme = useTheme();
   const [isThemeWindowOpened, setIsThemeWindowOpened] = useState(false);
@@ -35,25 +35,52 @@ const Header: React.FC<HeaderProps> = ({ mode }) => {
   return (
     <AppBar className={cn(styles.header, styles[mode])}>
       <Container className={styles.header__wrapper}>
-        <Box className={styles.header__nav}>
-          <Box className={styles.header__item}>
-            <Typography variant="h6">{username}</Typography>
-            <PersonOutline fontSize="large" />
-          </Box>
+        {username ? (
+          <Box className={styles.header__nav}>
+            <Box className={styles.header__item}>
+              <Typography variant="h6">{username}</Typography>
+              <PersonOutline fontSize="large" />
+            </Box>
 
-          <Box className={styles.header__item}>
-            <Search
-              onClick={handleSearchButtonClick}
-              fontSize="large"
-              sx={{ cursor: "pointer" }}
-            />
+            <Box className={styles.header__item}>
+              <Search
+                onClick={handleSearchButtonClick}
+                fontSize="large"
+                sx={{ cursor: "pointer" }}
+              />
+              <Settings
+                onClick={handleSettingsButtonClick}
+                fontSize="large"
+                sx={{ cursor: "pointer" }}
+              />
+              <Logout
+                onClick={handleLogoutButtonClick}
+                fontSize="large"
+                sx={{ cursor: "pointer" }}
+              />
+            </Box>
+          </Box>
+        ) : (
+          <Box className={styles.header__container}>
+            <Typography
+              textAlign={"center"}
+              variant="h5"
+              sx={
+                theme === "default" || theme === "blue"
+                  ? { color: "#000" }
+                  : { color: "#fff" }
+              }
+            >
+              Вход в чат
+            </Typography>
             <Settings
               onClick={handleSettingsButtonClick}
               fontSize="large"
               sx={{ cursor: "pointer" }}
+              className={styles.header__icon}
             />
           </Box>
-        </Box>
+        )}
 
         {isSearchInput && (
           <Input
@@ -64,7 +91,14 @@ const Header: React.FC<HeaderProps> = ({ mode }) => {
         )}
         {isThemeWindowOpened && (
           <div>
-            <ThemeWindow className={styles.header__theme} />
+            <ThemeWindow
+              className={styles.header__theme}
+              mode={
+                theme === "default" || theme === "blue"
+                  ? "theme__default"
+                  : "theme__secondary"
+              }
+            />
           </div>
         )}
       </Container>

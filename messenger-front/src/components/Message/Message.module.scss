@@ -36,10 +36,12 @@
 
 .rec__green {
   background-color: $received-green !important;
+  color: $input-secondary-value !important;
 }
 
 .sen__green {
-  background-color: $received-green !important;
+  background-color: $sended-green !important;
+  color: $input-secondary-value !important;
 }
 
 .rec__blue {
@@ -47,13 +49,15 @@
 }
 
 .sen__blue {
-  background-color: $received-blue !important;
+  background-color: $sended-blue !important;
 }
 
 .rec__dark {
   background-color: $received-dark !important;
+  color: $input-secondary-value !important;
 }
 
 .sen__dark {
-  background-color: $received-dark !important;
+  background-color: $sended-dark !important;
+  color: $input-secondary-value !important;
 }
