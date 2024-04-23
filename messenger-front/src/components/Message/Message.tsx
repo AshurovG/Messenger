@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef } from "react";
 import cn from "classnames";
 import styles from "./Message.module.scss";
 import { Typography, Box } from "@mui/material";
@@ -9,6 +9,7 @@ type MessageProps = {
   text: string;
   className?: string;
   isError?: boolean;
+  onContextMenu?: React.MouseEventHandler<HTMLDivElement>; // Добавляем onContextMenu
   mode:
     | "rec__default"
     | "sen__default"
@@ -18,46 +19,56 @@ type MessageProps = {
     | "rec__blue"
     | "sen__dark"
     | "rec__dark";
+  forwardedRef?: React.Ref<HTMLDivElement>; // Добавляем forwardedRef
 };
 
-const Message: React.FC<MessageProps> = ({
-  senderName,
-  text,
-  className,
-  isError,
-  mode,
-}) => {
-  const isWhiteCaption = !["rec__default", "sen__default"].includes(mode);
-  const messageType = mode.split("__")[0];
+const Message = forwardRef<HTMLDivElement, MessageProps>(
+  (
+    {
+      senderName,
+      text,
+      className,
+      isError,
+      mode,
+      onContextMenu,
+      forwardedRef, // Получаем forwardedRef
+    },
+    ref
+  ) => {
+    const isWhiteCaption = !["rec__default", "sen__default"].includes(mode);
+    const messageType = mode.split("__")[0];
 
-  return (
-    <Box
-      className={styles.message__wrapper}
-      sx={
-        messageType === "sen"
-          ? { display: "flex", justifyContent: "flex-end" }
-          : { display: "flex", justifyContent: "flex-start" }
-      }
-    >
+    return (
       <Box
-        className={
-          className
-            ? cn(className, mode, styles.message)
-            : cn(styles.message, styles[mode])
+        className={styles.message__wrapper}
+        sx={
+          messageType === "sen"
+            ? { display: "flex", justifyContent: "flex-end" }
+            : { display: "flex", justifyContent: "flex-start" }
         }
       >
-        <Typography
-          variant="caption"
-          style={isWhiteCaption ? { color: "#fff" } : { color: "#9c9898" }}
-          className={styles.message__caption}
+        <Box
+          ref={forwardedRef || ref}
+          onContextMenu={onContextMenu}
+          className={
+            className
+              ? cn(className, mode, styles.message)
+              : cn(styles.message, styles[mode])
+          }
         >
-          {senderName}
-        </Typography>
-        <Typography className={styles.message__text}>{text}</Typography>
-        {isError && <ErrorRounded className={styles.message__icon} />}
+          <Typography
+            variant="caption"
+            style={isWhiteCaption ? { color: "#fff" } : { color: "#9c9898" }}
+            className={styles.message__caption}
+          >
+            {senderName}
+          </Typography>
+          <Typography className={styles.message__text}>{text}</Typography>
+          {isError && <ErrorRounded className={styles.message__icon} />}
+        </Box>
       </Box>
-    </Box>
-  );
-};
+    );
+  }
+);
 
 export default Message;

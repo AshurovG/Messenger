@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useUsername, setUsernameAction } from "slices/MainSlice";
 import styles from "./MessengerPage.module.scss";
@@ -26,6 +26,14 @@ const MessengerPage = () => {
   const [messageValue, setMessageValue] = useState("");
   const [ws, setWs] = useState<WebSocket | null>(null);
   const [messages, setMessages] = useState<MessageData[]>([]);
+  const [deleteMenuPosition, setDeleteMenuPosition] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [deletedMessageId, setDeletedMessageId] = useState(0);
+  const [searchValue, setSearchValue] = useState("");
+
+  const messageRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setUsernameValue(event.target.value);
@@ -42,6 +50,8 @@ const MessengerPage = () => {
       const messageData = JSON.parse(event.data);
       if (event.data.isError) {
         // messages[messages.length - 1].isError = true;
+        console.log("REC");
+
         setMessages((prevMessages) => {
           const newMessages = [...prevMessages]; // Создаем копию массива
           newMessages[newMessages.length - 1].isError = true; // Изменяем нужный элемент
@@ -80,11 +90,13 @@ const MessengerPage = () => {
   };
 
   const sendMessage = () => {
+    const currentTime = new Date().toISOString();
     if (ws) {
+      console.log("SEND", messageValue);
       ws.send(
         JSON.stringify({
           sender: username,
-          time: new Date().toISOString(),
+          time: currentTime,
           text: messageValue,
         })
       );
@@ -93,6 +105,7 @@ const MessengerPage = () => {
         {
           sender: username,
           text: messageValue,
+          time: currentTime,
           type: "sen",
         },
         ...messages,
@@ -111,9 +124,72 @@ const MessengerPage = () => {
     }
   };
 
+  const handleMessageRightClick = (
+    event: React.MouseEvent<HTMLDivElement>,
+    id: number
+  ) => {
+    event.preventDefault();
+    setDeleteMenuPosition({ x: event.clientX - 150, y: event.clientY - 70 });
+    setDeletedMessageId(id);
+    console.log(messages);
+    console.log(id);
+  };
+
+  const handleDeleteClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    const newMessages = messages.filter(
+      (message) => message.time !== deletedMessageId
+    );
+    setMessages(newMessages);
+    setDeleteMenuPosition(null);
+  };
+
+  const onSearchValueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(event.target.value);
+    // const foundMessageIndex = messages.findIndex((message) =>
+    //   message.text.includes(event.target.value)
+    // );
+
+    // if (foundMessageIndex !== -1) {
+    //   const messageElement = messageRefs.current[foundMessageIndex];
+    //   if (messageElement) {
+    //     messageElement.scrollIntoView({ behavior: "smooth" });
+    //   }
+    // }
+  };
+
+  useEffect(() => {
+    if (searchValue) {
+      const foundMessageIndex = messages.findIndex((message) =>
+        message.text.includes(searchValue)
+      );
+
+      if (foundMessageIndex !== -1) {
+        const messageElement = messageRefs.current[foundMessageIndex];
+        if (messageElement) {
+          messageElement.scrollIntoView({ behavior: "smooth" });
+          messageElement.classList.add(`${styles.highlighted}`);
+
+          setTimeout(() => {
+            messageElement.classList.remove(`${styles.highlighted}`);
+          }, 2000);
+        }
+      }
+    }
+  }, [searchValue, messages]);
+
   return (
-    <div className={styles.page}>
+    <div
+      onClick={
+        deleteMenuPosition == null
+          ? () => {}
+          : () => setDeleteMenuPosition(null)
+      }
+      className={styles.page}
+    >
       <Header
+        searchValue={searchValue}
+        onSearchValueChange={onSearchValueChange}
         mode={`header__${theme}`}
         handleLogoutButtonClick={handleLogoutButtonClick}
       />
@@ -123,12 +199,17 @@ const MessengerPage = () => {
       >
         {username !== "" && (
           <Box className={styles.page__messages}>
-            {messages.map((message) => (
+            {messages.map((message, index) => (
               <Message
+                ref={(el) => (messageRefs.current[index] = el)}
+                key={message.text}
                 senderName={message.sender}
                 text={message.text}
                 isError={message.isError}
                 mode={`${message.type}__${theme}`}
+                onContextMenu={(event: React.MouseEvent<HTMLDivElement>) =>
+                  handleMessageRightClick(event, message.time)
+                }
               />
             ))}
           </Box>
@@ -166,6 +247,30 @@ const MessengerPage = () => {
               onChange={handleInputChange}
               value={usernameValue}
             />
+          </Box>
+        )}
+        {deleteMenuPosition && (
+          <Box
+            onClick={handleDeleteClick}
+            className={styles.page__delete}
+            sx={
+              theme === "default" || theme === "blue"
+                ? {
+                    position: "absolute",
+                    top: deleteMenuPosition.y,
+                    left: deleteMenuPosition.x,
+                    // backgroundColor: "#e9e9e9",
+                  }
+                : {
+                    position: "absolute",
+                    top: deleteMenuPosition.y,
+                    left: deleteMenuPosition.x,
+                    // backgroundColor: "#939393",
+                    color: "#fff",
+                  }
+            }
+          >
+            <Typography>Удалить сообщение</Typography>
           </Box>
         )}
       </Container>

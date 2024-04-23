@@ -25,4 +25,16 @@
   &__form {
     margin: 0 auto;
   }
+
+  &__delete {
+    padding: 15px 20px;
+    background-color: rgba(132, 132, 132, 0.7);
+    border-radius: 10px;
+    color: #fff;
+    cursor: pointer;
+  }
+}
+
+.highlighted {
+  border: 1px solid red !important;
 }

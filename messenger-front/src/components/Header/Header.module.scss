@@ -64,7 +64,8 @@
 
   &__input {
     position: absolute !important;
-    right: 0;
+    left: 50%;
+    transform: translateX(-50%);
     top: 110px;
     max-width: 300px;
     height: 40px;

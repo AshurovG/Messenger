@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import cn from "classnames";
 import styles from "./Header.module.scss";
 import { AppBar, Container, Box, Typography } from "@mui/material";
@@ -10,13 +10,29 @@ import { useTheme, useUsername } from "slices/MainSlice";
 type HeaderProps = {
   mode: "header__default" | "header__green" | "header__blue" | "header__dark";
   handleLogoutButtonClick: () => void;
+  searchValue: string;
+  onSearchValueChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ mode, handleLogoutButtonClick }) => {
+const Header: React.FC<HeaderProps> = ({
+  mode,
+  handleLogoutButtonClick,
+  searchValue,
+  onSearchValueChange,
+}) => {
   const username = useUsername();
   const theme = useTheme();
   const [isThemeWindowOpened, setIsThemeWindowOpened] = useState(false);
   const [isSearchInput, setIsSearchInput] = useState(false);
+
+  useEffect(() => {
+    if (isSearchInput) {
+      setIsSearchInput(false);
+    }
+    if (isThemeWindowOpened) {
+      setIsThemeWindowOpened(false);
+    }
+  }, [username]);
 
   const handleSettingsButtonClick = () => {
     if (!isThemeWindowOpened && isSearchInput) {
@@ -84,6 +100,8 @@ const Header: React.FC<HeaderProps> = ({ mode, handleLogoutButtonClick }) => {
 
         {isSearchInput && (
           <Input
+            value={searchValue}
+            onChange={onSearchValueChange}
             placeholder="Поиск сообщения"
             className={styles.header__input}
             mode={`input__${theme}`}
