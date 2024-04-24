@@ -45,32 +45,50 @@ const MessengerPage = () => {
     setMessageValue(event.target.value);
   };
 
+  // if (ws) {
+  //   ws.onmessage = (event) => {
+  //     const messageData = JSON.parse(event.data);
+  //     if (event.data.isError) {
+  //       // messages[messages.length - 1].isError = true;
+  //       console.log("REC", messageData);
+
+  //       setMessages((prevMessages) => {
+  //         const newMessages = [...prevMessages]; // Создаем копию массива
+  //         newMessages[newMessages.length - 1].isError = true; // Изменяем нужный элемент
+  //         return newMessages; // Возвращаем новый массив
+  //       });
+  //       console.log("error!!!");
+  //     } else {
+  //       setMessages((prevMessages) => [
+  //         {
+  //           sender: messageData.sender,
+  //           text: messageData.text,
+  //           time: messageData.time,
+  //           type: "rec",
+  //         },
+  //         ...prevMessages,
+  //       ]);
+  //     }
+
+  //     console.log(messageData);
+  //   };
+  // }
   if (ws) {
     ws.onmessage = (event) => {
       const messageData = JSON.parse(event.data);
       if (event.data.isError) {
-        // messages[messages.length - 1].isError = true;
-        console.log("REC");
-
-        setMessages((prevMessages) => {
-          const newMessages = [...prevMessages]; // Создаем копию массива
-          newMessages[newMessages.length - 1].isError = true; // Изменяем нужный элемент
-          return newMessages; // Возвращаем новый массив
-        });
-        console.log("error!!!");
+        // Обработка ошибки
       } else {
         setMessages((prevMessages) => [
+          ...prevMessages, // Добавляем новые сообщения в конец массива
           {
             sender: messageData.sender,
             text: messageData.text,
             time: messageData.time,
             type: "rec",
           },
-          ...prevMessages,
         ]);
       }
-
-      console.log(messageData);
     };
   }
 
@@ -89,10 +107,36 @@ const MessengerPage = () => {
     setWs(ws);
   };
 
+  // const sendMessage = () => {
+  //   const currentTime = new Date().toISOString();
+  //   console.log("SEND", messageValue);
+  //   if (ws) {
+  //     ws.send(
+  //       JSON.stringify({
+  //         sender: username,
+  //         time: currentTime,
+  //         text: messageValue,
+  //       })
+  //     );
+
+  //     setMessages([
+  //       {
+  //         sender: username,
+  //         text: messageValue,
+  //         time: currentTime,
+  //         type: "sen",
+  //       },
+  //       ...messages,
+  //     ]);
+
+  //     setMessageValue("");
+  //   }
+  // };
+
   const sendMessage = () => {
     const currentTime = new Date().toISOString();
+    console.log("SEND", messageValue);
     if (ws) {
-      console.log("SEND", messageValue);
       ws.send(
         JSON.stringify({
           sender: username,
@@ -101,14 +145,14 @@ const MessengerPage = () => {
         })
       );
 
-      setMessages([
+      setMessages((prevMessages) => [
+        ...prevMessages, // Добавляем новые сообщения в конец массива
         {
           sender: username,
           text: messageValue,
           time: currentTime,
           type: "sen",
         },
-        ...messages,
       ]);
 
       setMessageValue("");
@@ -199,19 +243,22 @@ const MessengerPage = () => {
       >
         {username !== "" && (
           <Box className={styles.page__messages}>
-            {messages.map((message, index) => (
-              <Message
-                ref={(el) => (messageRefs.current[index] = el)}
-                key={message.text}
-                senderName={message.sender}
-                text={message.text}
-                isError={message.isError}
-                mode={`${message.type}__${theme}`}
-                onContextMenu={(event: React.MouseEvent<HTMLDivElement>) =>
-                  handleMessageRightClick(event, message.time)
-                }
-              />
-            ))}
+            {messages
+              .slice()
+              .reverse()
+              .map((message, index) => (
+                <Message
+                  ref={(el) => (messageRefs.current[index] = el)}
+                  key={`${message.sender}-${message.time}`} // Используем уникальный ключ
+                  senderName={message.sender}
+                  text={message.text}
+                  isError={message.isError}
+                  mode={`${message.type}__${theme}`}
+                  onContextMenu={(event: React.MouseEvent<HTMLDivElement>) =>
+                    handleMessageRightClick(event, message.time)
+                  }
+                />
+              ))}
           </Box>
         )}
 
