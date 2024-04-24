@@ -269,6 +269,11 @@ const MessengerPage = () => {
               onChange={handleMessageInputChange}
               placeholder="Введите сообщение..."
               mode={`input__${theme}`}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  sendMessage();
+                }
+              }}
             />
             <SendButton mode={`button__${theme}`} onClick={sendMessage} />
           </Box>
