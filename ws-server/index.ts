@@ -2,11 +2,17 @@ import express from "express";
 import http from "http";
 import WebSocket from "ws";
 import axios from "axios";
+import fs from "fs";
+import swaggerUi from "swagger-ui-express";
+import * as swaggerDocument from "./swagger/application_layer.json";
 
 const app = express();
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 app.use(express.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 const HOST = "172.20.10.3";
 
 type MessageData = {
@@ -30,14 +36,15 @@ let connections: ConectionsData = {};
 // Отправка сообщения на транспортный уровень
 const sendMessageToAnotherLevel = async (message: MessageData) => {
   try {
-    // await axios("http://localhost:3001/send", {
-    //   method: "POST",
-    //   data: message,
-    // });
-    await axios(`http://${HOST}:8000/transferMessage/`, {
+    console.log("send msg to another level", message);
+    await axios("http://localhost:3001/send", {
       method: "POST",
       data: message,
     });
+    // await axios(`http://${HOST}:8000/transferMessage/`, {
+    //   method: "POST",
+    //   data: message,
+    // });
   } catch (error) {
     console.log(error);
   }
@@ -61,10 +68,11 @@ const sendErrorMessage = (message: MessageData) => {
 };
 
 //Метод для получения сообщений с транспортного уровня
-app.post("/recieve", (req, res) => {
+app.post("/receive", (req, res) => {
+  // ПОМЕНЯЛ НАЗВАНИЕ МЕТОДА
   // TODO: Сделать обработку ошибки
   const message: MessageData = req.body; // --
-  console.log("BODY IS", req.body);
+  console.log("receive msg from transport level", req.body);
   if (req.body.isError) {
     sendErrorMessage(message);
     console.log("Произошла ошибка отправки сообщения");
@@ -100,9 +108,7 @@ wss.on("connection", (ws, req: any) => {
       const date = new Date(messageJSON.time);
       const timeInSeconds = Math.floor(date.getTime() / 1000);
       messageJSON.time = timeInSeconds;
-      console.log(messageJSON);
-      // messageJSON.time = Math.floor(messageJSON.date.getTime() / 1000);
-
+      console.log("rec msg from client", messageJSON);
       sendMessageToAnotherLevel(messageJSON);
     } catch (error) {
       console.error("Error parsing JSON:", error);

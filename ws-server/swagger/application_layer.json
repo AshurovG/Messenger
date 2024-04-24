@@ -1,0 +1,72 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Документация к API Messenger прикладного уровня",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Recieve",
+      "description": "Получение сообщения"
+    }
+  ],
+  "paths": {
+    "/recieve/": {
+      "post": {
+        "summary": "Передает полученное сообщение открытым ws-соединениям",
+        "tags": ["Recieve"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Info"
+              },
+              "example": {
+                "sender": "Ivan",
+                "text": "Test message",
+                "time": 14637264724,
+                "isError": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Info": {
+        "type": "object",
+        "properties": {
+          "sender": {
+            "type": "string",
+            "required": true
+          },
+          "text": {
+            "type": "string",
+            "required": true
+          },
+          "time": {
+            "type": "number",
+            "required": true
+          },
+          "isError": {
+            "type": "boolean",
+            "required": true
+          }
+        }
+      }
+    }
+  }
+}
