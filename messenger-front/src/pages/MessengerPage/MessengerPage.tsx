@@ -45,50 +45,24 @@ const MessengerPage = () => {
     setMessageValue(event.target.value);
   };
 
-  // if (ws) {
-  //   ws.onmessage = (event) => {
-  //     const messageData = JSON.parse(event.data);
-  //     if (event.data.isError) {
-  //       // messages[messages.length - 1].isError = true;
-  //       console.log("REC", messageData);
-
-  //       setMessages((prevMessages) => {
-  //         const newMessages = [...prevMessages]; // Создаем копию массива
-  //         newMessages[newMessages.length - 1].isError = true; // Изменяем нужный элемент
-  //         return newMessages; // Возвращаем новый массив
-  //       });
-  //       console.log("error!!!");
-  //     } else {
-  //       setMessages((prevMessages) => [
-  //         {
-  //           sender: messageData.sender,
-  //           text: messageData.text,
-  //           time: messageData.time,
-  //           type: "rec",
-  //         },
-  //         ...prevMessages,
-  //       ]);
-  //     }
-
-  //     console.log(messageData);
-  //   };
-  // }
   if (ws) {
     ws.onmessage = (event) => {
       const messageData = JSON.parse(event.data);
-      if (event.data.isError) {
-        // Обработка ошибки
-      } else {
-        setMessages((prevMessages) => [
-          ...prevMessages, // Добавляем новые сообщения в конец массива
-          {
-            sender: messageData.sender,
-            text: messageData.text,
-            time: messageData.time,
-            type: "rec",
-          },
-        ]);
+      if (messageData.isError) {
+        messageData.text = "Сообщение не дошло";
       }
+      console.log("REEEC");
+      setMessages((prevMessages) => [
+        ...prevMessages, // Добавляем новые сообщения в конец массива
+        {
+          sender: messageData.sender,
+          text: messageData.text,
+          time: messageData.time,
+          isError: messageData.isError,
+          type: "rec",
+        },
+      ]);
+      console.log(messages);
     };
   }
 

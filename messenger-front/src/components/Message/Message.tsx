@@ -52,13 +52,22 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
           onContextMenu={onContextMenu}
           className={
             className
-              ? cn(className, mode, styles.message)
+              ? isError
+                ? cn(className, mode, styles.message, styles.message__error)
+                : cn(className, mode, styles.message)
+              : isError
+              ? cn(styles.message, styles[mode], styles.message__error)
               : cn(styles.message, styles[mode])
           }
+          // sx={isError ? { backgroundColor: "#D8D8DC" } : undefined}
         >
           <Typography
             variant="caption"
-            style={isWhiteCaption ? { color: "#fff" } : { color: "#9c9898" }}
+            style={
+              isWhiteCaption || isError
+                ? { color: "#fff" }
+                : { color: "#9c9898" }
+            }
             className={styles.message__caption}
           >
             {senderName}
